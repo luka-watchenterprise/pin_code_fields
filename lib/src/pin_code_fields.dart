@@ -200,6 +200,9 @@ class PinCodeTextField extends StatefulWidget {
 
   /// Enable auto unfocus
   final bool autoUnfocus;
+  
+  /// Enables alert dialog which asks about text paste
+  final bool enableDialog;
 
   PinCodeTextField({
     Key? key,
@@ -264,6 +267,7 @@ class PinCodeTextField extends StatefulWidget {
     /// Default create internal [AutofillGroup]
     this.useExternalAutoFillGroup = false,
     this.scrollPadding = const EdgeInsets.all(20),
+    this.enableDialog = false,
   })  : assert(obscuringCharacter.isNotEmpty),
         super(key: key);
 
@@ -661,6 +665,11 @@ class _PinCodeTextFieldState extends State<PinCodeTextField>
     final formattedPastedText = pastedText
         .trim()
         .substring(0, min(pastedText.trim().length, widget.length));
+    
+    if (!widget.enableDialog) {
+      _textEditingController!.text = formattedPastedText;
+      return Future.value(null);
+    }
 
     final defaultPastedTextStyle = TextStyle(
       fontWeight: FontWeight.bold,
